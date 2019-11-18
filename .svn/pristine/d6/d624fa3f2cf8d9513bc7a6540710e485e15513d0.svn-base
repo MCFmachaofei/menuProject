@@ -1,0 +1,79 @@
+<template>
+  <div class="flex flex1" style="padding-top:72px;">
+    <!-- <iframe width="100%" height="100%" border='0' :src='"http://localhost:8081/dataPortal/guide/personalPortrait/index.html?t="+randomObj.edit'></iframe> -->
+    <iframe width="100%" height="100%" frameborder='no' marginwidth='0' marginheight='0' scrolling='no' border='0' :src="setSrc"></iframe>
+  </div>
+</template>
+<script>
+export default {
+  data() {
+    return {
+      randomObj: {
+        edit: 'edit_' + new Date().getTime() // 先定义随机ID
+      },
+      message: {},
+      setSrc: '',
+      curPage: '' //教师画像、学生画像
+    }
+  },
+  watch: {
+    message() {
+      this.gotoUrl()
+    }
+  },
+  created() {
+    window.addEventListener('message', e => {
+      var data = e.data
+      if (data.type === '1') {
+        this.message = data.data
+        this.curPage = data.data.pages
+        if (this.curPage === 'student') {
+          localStorage.setItem('personalPortraitName', this.message.name + '')
+        } else {
+          //教师画像
+          this.$store.commit('curNavId', this.message.personalId)
+          localStorage.setItem('teacherPortraitName', this.message.name + '')
+        }
+      }
+    })
+  },
+  mounted() {
+    var setIp = this.$store.state.user.innerIframeUrl
+    var time = new Date().valueOf()
+    setTimeout(() => {
+      var id = this.$store.state.user.curNavId
+      this.setSrc = setIp + '/dataPortal/guide/personalPortrait/index.html?t=' + time + '&id=' + id
+    }, 500)
+
+    // this.$router.push({
+    //   path: '/analysis/' + this.$route.params.id
+    // })
+  },
+  methods: {
+    gotoUrl() {
+      if (this.curPage === 'student') {
+        this.$router.push({
+          path: '/personalPortrait/inner/' + this.message.pathIndex + '/' + this.message.browsePath
+        })
+      } else {
+        this.$router.push({
+          path:
+            '/personalPortrait/teacher/' +
+            this.message.personalId +
+            '/' +
+            this.message.id +
+            '/' +
+            this.message.panelId +
+            '/' +
+            this.message.siteId +
+            '/' +
+            this.message.skipType
+        })
+      }
+    },
+    module_edit(param) {
+      alert(param)
+    }
+  }
+}
+</script>

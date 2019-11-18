@@ -1,0 +1,28 @@
+<template>
+<div class="flex flex1" style="">
+    <!-- <iframe width="100%" height="100%" border='0' :src='"http://192.168.0.22:8020/library/index.html?t="+randomObj.edit'></iframe> -->
+    <iframe width="100%" height="100%" frameborder='no' marginwidth='0' marginheight='0' scrolling='no' border='0'
+    :src='iframeUrl'></iframe>
+</div>
+</template>
+<script>
+export default {
+  data () {
+    return {
+      iframeUrl: '',
+      panelId: '',
+      siteId: ''
+    }
+  },
+  mounted () {
+    debugger
+    // 接收 参数
+    this.panelId = this.$route.params.panelId
+    this.siteId = this.$route.params.siteId
+
+    // 设置 iframe 路径
+    this.iframeUrl = 'http://192.168.4.210:82/zymdMenu/loadPanel?panelId=' + this.panelId + '&siteId=' + this.siteId
+  }
+
+}
+</script>

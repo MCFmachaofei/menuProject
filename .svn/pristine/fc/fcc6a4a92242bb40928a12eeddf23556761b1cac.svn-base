@@ -1,0 +1,103 @@
+<template>
+    <div class="flex">
+        <ul class="leftNav flex1">
+            <li v-for="(item,index) in treeList" :key="index" :class="curIndex === index ? 'cur' :''"  @click="curIndex = index">
+                <router-link :to="item.url">
+                    <img :src="require('@/assets/img/icon0'+parseInt(index+2)+'.png')" alt="">
+                    <span>{{item.name}}</span>
+                    <em v-if="item.value">{{item.value}}</em>
+                </router-link>
+            </li>
+        </ul>
+    </div>
+
+</template>
+<script>
+export default {
+  props: [
+    'treeList'
+
+  ],
+  data () {
+    return {
+      curIndex: '0' // 默认选中
+      // treeList: [
+      //   {
+      //     name: '基本信息',
+      //     value: '',
+      //     url: '/personalPortrait/baseInfo'
+      //   },
+      //   {
+      //     name: '修改密码',
+      //     value: '',
+      //     url: '/page1'
+      //   },
+      //   {
+      //     name: '我的预警',
+      //     value: '5',
+      //     url: '/page2'
+      //   },
+      //   {
+      //     name: '我的收藏',
+      //     value: '',
+      //     url: '/page3'
+      //   },
+      //   {
+      //     name: '查看记录',
+      //     value: '',
+      //     url: '/page4'
+      //   },
+      //   {
+      //     name: '我的推送',
+      //     value: '',
+      //     url: '/page5'
+      //   }
+      // ]
+    }
+  },
+  mounted () {
+
+  }
+}
+</script>
+<style lang="less" scoped>
+@import '~@/assets/styls/common.less';
+.leftNav{
+    width:230px;
+    .flexColumn;
+    border-right:1px solid @borderColor;
+    li{
+        padding-left:24px;
+        height:58px;
+        .flex;
+        cursor: pointer;
+        border-bottom:1px solid @borderColor;
+        .boxSizing;
+        &:hover,&.cur{
+            a{
+                color:#fff;
+            }
+        }
+        a{
+            flex:1;
+            color:@fontColor;
+            &:hover{
+                color:#fff;
+            }
+            .alignCenter;
+            img{
+                .mgr15;
+            }
+            em{
+                .borderRadius(12px);
+                font-size:14px;
+                color:#fff;
+                padding:1px 10px;
+                background:@hoverBgColor;
+                display:inline-block;
+                .mgl12;
+            }
+        }
+    }
+}
+</style>

@@ -1,0 +1,228 @@
+<template>
+<div class="flexColumn flex1">
+    <div id="top">
+      <div class="alignCenter flexSpaceBetween">
+        <div class="flex h100" style="width:90%;">
+            <div class="logo flex">
+                <a class="alignCenter flex1">
+                    <img src="@/assets/img/logo.png" alt="">
+                    <big class="mgl20">数据门户</big>
+                </a>
+            </div>
+            <div class="flex relative"  style="max-width:50%;">
+              <a class="topIcon prev" @click="prev()"></a>
+              <a class="topIcon next" @click="next()"></a>
+              <div style="overflow:hidden;">
+                <ul class="flex flex1" ref="listUl">
+                    <li class="alignCenter flexCenter" v-for="(item,index) in navList" :key="index" :class="curIndex === index ? 'cur' :''"  @click="curIndex = index">
+                      <router-link :to='"/"+item.url+"/"'>{{item.name}}</router-link>
+                    </li>
+                </ul>
+              </div>
+            </div>
+        </div>
+        <div class="user alignCenter">
+            <a>
+                <img src="@/assets/img/default.png" alt="">
+            </a>
+            <a href="/logout" title="退出" class="exit alignCenter mgl22">
+                <img src="@/assets/img/icon01.png" alt="">
+            </a>
+        </div>
+      </div>
+    </div>
+    <router-view></router-view>
+</div>
+
+</template>
+<style rel="stylesheet/less" lang="less" scoped>
+@import '~@/assets/styls/common.less';
+#cnt{
+    padding:8px 20px;
+}
+#top{
+    height:72px;
+    padding:0 22px 0 24px;
+    border-bottom:1px solid @borderColor;
+    .h100{
+        height:100%;
+    }
+    a{
+        color:@navFontColor;
+        font-size:16px;
+        &:hover{
+            color:@hoverColor;
+        }
+        big{
+            color:#fff;
+            font-size:24px;
+            font-weight: normal;
+        }
+    }
+    .logo{
+        margin-right:68px;
+    }
+    .relative{
+      .topIcon{
+        position:absolute;
+        cursor: pointer;
+        width:14px;
+        height:29px;
+        top:50%;
+        &.prev{
+              background: url(~@/assets/img/icon17.png) no-repeat;
+              margin-top:-15px;
+              left:-14px;
+              &:hover{
+                background: url(~@/assets/img/icon15.png) no-repeat;
+              }
+        }
+        &.next{
+              background: url(~@/assets/img/icon18.png) no-repeat;
+              margin-top:-15px;
+              right:-14px;
+              &:hover{
+                background: url(~@/assets/img/icon16.png) no-repeat;
+              }
+        }
+      }
+    }
+    ul{
+        height:100%;
+        position:relative;
+        transition:all 1s;
+        li{
+            width:105px;
+            flex-shrink:0;
+            height: 100%;
+            text-align: center;
+            border-right:1px solid @borderColor;
+            .boxSizing;
+            border-bottom:2px solid transparent;
+            &:first-child{
+              border-left:1px solid @borderColor;
+            }
+            &:hover,&.cur{
+              a{
+                  color:@hoverColor;
+              }
+
+              border-bottom:2px solid @hoverBgColor;
+            }
+            a{
+              flex: 1;
+              height: 100%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+        }
+    }
+    .user{
+        height:100%;
+    }
+}
+
+</style>
+
+<script>
+import store from '@/store'
+import $ from 'jquery'
+export default {
+  data () {
+    return {
+      scrollObj: {
+        index: 0, //
+        width: 0, // 滚动宽度
+        offsetWidth: 0, // 偏移宽度
+        step: 0, // 可滚动步长
+        residue: 0// 剩余宽度
+      },
+      curIndex: 0, // 默认选中
+      navList: []
+    }
+  },
+  watch: {
+    '$route' (to, from) {
+      let pathStr = to.path
+      let strIndex = pathStr.indexOf('/', pathStr.indexOf('/') + 1)
+      // 判断路由
+      let str = pathStr.substring(1, strIndex)
+      this.checkRouterLocal(str)
+    }
+  },
+  mounted () {
+    store.dispatch('getNavInfo', res => {
+      // res.push({
+      //   name: 'iframe',
+      //   id: '4',
+      //   url: 'iframe'
+      // })
+      this.navList = res
+    })
+  },
+  methods: {
+    checkRouterLocal (path) {      
+      // 查找当前路由下标高亮
+      this.curIndex = this.navList.findIndex(item => item.url === path)
+    },
+    prev () {
+      this.getScrollStep(1)
+      if (this.scrollObj.index < this.scrollObj.step) {
+        return false
+      } else {
+        this.scrollObj.index--
+        this.scrollStep()
+      }
+    },
+    next () {
+      if (this.getScrollStep(0)) {
+        if (this.scrollObj.index > this.scrollObj.step && this.scrollObj.residue === 0) {
+          return false
+        } else if (this.scrollObj.step === 0 && this.scrollObj.residue > 0) {
+          this.scrollObj.index++
+          this.scrollOffset()
+        } else if (this.scrollObj.step > 0) {
+          this.scrollObj.index++
+          this.scrollStep()
+        }
+      }
+    },
+    scrollOffset () {
+      this.scrollObj.offsetWidth += this.scrollObj.residue
+      this.animateScroll()
+    },
+    animateScroll () {
+      $(this.$refs.listUl).css({
+        marginLeft: '-' + this.scrollObj.offsetWidth + 'px'
+      })
+    },
+    scrollStep () {
+      this.scrollObj.offsetWidth = this.scrollObj.index * 105
+      this.animateScroll()
+    },
+    getScrollStep (tag) {
+      let _w = $(this.$refs.listUl).parent().width() // 可见区域宽度
+      let _sumW = this.navList.length * 105 // list 总宽度
+
+      if (tag) {
+        if (this.scrollObj.offsetWidth > 0) {
+          this.scrollObj.step = parseInt(this.scrollObj.offsetWidth) / 105 // 可滚动步数
+          this.scrollObj.residue = this.scrollObj.offsetWidth % 105
+        }
+      } else {
+        if (_sumW === _w + this.scrollObj.offsetWidth) {
+          return false
+        }
+        let _scrollW = _sumW - _w - this.scrollObj.offsetWidth// 可滚动宽度
+        if (_scrollW > 0) {
+          this.scrollObj.step = parseInt(_scrollW / 105) // 可滚动步数
+          this.scrollObj.residue = _scrollW % 105
+        }
+      }
+      return true
+    }
+
+  }
+}
+</script>

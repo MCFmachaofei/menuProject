@@ -1,0 +1,135 @@
+<template>
+  <div class="flex flex1" id="wrap">
+    <leftTreeNav :treeList='treeList' :curIndex='curIndex' />
+    <div class="flex1 flex" id="cnt">
+      <router-view />
+    </div>
+    <!-- <footerNav/> -->
+  </div>
+</template>
+<script>
+import leftTreeNav from '@/views/layout/components/leftTreeNav'
+// import footerNav from '@/views/layout/components/footerNav'
+import * as menuApi from '@/api/menu'
+export default {
+  components: {
+    leftTreeNav
+    // footerNav
+  },
+  data() {
+    return {
+      id: '',
+      curIndex: '0',
+      treeList: [],
+      analysisMenuId: ''
+    }
+  },
+  mounted() {
+    // 其他页面跳转
+    if (
+      this.$store.state.user.analysisObj.panelId &&
+      this.$store.state.user.analysisObj.siteId &&
+      this.$store.state.user.analysisObj.menuId &&
+      this.$store.state.user.analysisObj.curId &&
+      this.$store.state.user.analysisObj.skipType
+    ) {
+      // 请求菜单
+      let obj = {}
+      obj.id = this.$store.state.user.analysisObj.menuId
+      menuApi.getMenu(obj, res => {
+        this.treeList = res
+        // 获取选中Name
+        let checkId = this.$store.state.user.analysisObj.curId // 选中索引号 0-0-1  [0,0,1]
+        let chartArr = []
+        if (checkId) {
+          chartArr = checkId.split('-')
+        }
+        var loopTree = res
+        for (let i = 0; i < chartArr.length; i++) {
+          var curIndexNum = chartArr[i]
+          if (i === chartArr.length - 1) {
+            var curMenuObj = loopTree[curIndexNum]
+            this.$store.commit('analysisId', curMenuObj.id)
+            this.$store.commit('analysisName', curMenuObj.name)
+            break
+          }
+          var menuObj = loopTree[curIndexNum]
+          loopTree = menuObj.children
+        }
+        // 设置选中菜单索引
+        this.curIndex = this.$store.state.user.analysisObj.curId
+        this.$router.push({
+          path:
+            '/analysis/index/innerIframe/' +
+            this.$store.state.user.analysisObj.menuId +
+            '/' +
+            this.$store.state.user.analysisObj.panelId +
+            '/' +
+            this.$store.state.user.analysisObj.siteId +
+            '/' +
+            this.$store.state.user.analysisObj.curId +
+            '/' +
+            this.$store.state.user.analysisObj.skipType
+        })
+      })
+    } else {
+      // 引导页跳转
+      this.analysisMenuId = localStorage.getItem('analysisMenuId')
+      let treeObjs = {}
+      // 默认选中第一个
+      let that = this
+      // 请求菜单
+      let obj = {}
+      obj.id = this.analysisMenuId
+      menuApi.getMenu(obj, res => {
+        this.treeList = res
+        if (this.treeList.length > 0) {
+          let getTreeChild = function(t) {
+            if (!t.children) {
+              treeObjs.pId = t.panelId
+              treeObjs.sId = t.siteId
+              treeObjs.skipType = t.skipType
+              that.$store.commit('analysisId', t.id)
+              that.$store.commit('analysisName', t.name)
+              return treeObjs
+            } else {
+              that.curIndex += '-0'
+              return getTreeChild(t.children[0])
+            }
+          }
+          getTreeChild(this.treeList[0])
+          // 路由跳转
+          this.$router.push({
+            path:
+              '/analysis/index/innerIframe/' +
+              that.analysisMenuId +
+              '/' +
+              treeObjs.pId +
+              '/' +
+              treeObjs.sId +
+              '/00' +
+              '/' +
+              treeObjs.skipType
+          })
+        }
+      })
+    }
+  },
+  methods: {
+    getIndex(obj) {
+      if (obj.children) {
+        this.curIndex += '-0'
+      } else {
+        this.curIndex += '-1'
+        return false
+      }
+      this.getIndex(obj.children)
+    }
+  }
+}
+</script>
+<style rel="stylesheet/less" lang="less" scoped>
+#cnt {
+  padding: 0px;
+}
+</style>

@@ -1,0 +1,11 @@
+<template>
+  <div id="app" class="flexColumn">
+    <!-- <topNav/> -->
+    <router-view/>
+  </div>
+</template>
+
+<style lang="less" rel="stylesheet/scss">
+@import 'assets/styls/common.less';
+
+</style>

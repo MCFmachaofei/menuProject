@@ -1,0 +1,28 @@
+import * as menuApi from '@/api/menu'
+const user = {
+  state: {
+    // 存放组件之间共享的数据
+    navList: null,
+    // innerIframeUrl: 'http://192.168.4.210:81',// 开发环境
+    innerIframeUrl: '' // 运行环境
+  },
+  mutations: {
+    // 显式的更改state里的数据
+    nav: (state, navList) => {
+      state.navList = navList
+    }
+  },
+  // getters: {
+  //   // 获取数据的方法
+  // },
+  actions: {
+    getNavInfo ({ commit }, callback) {
+      // console.log('ttt', menuApi)
+      menuApi.getMenu({}, res => {
+        commit('nav', res)
+        callback(res)
+      })
+    }
+  }
+}
+export default user

@@ -1,0 +1,65 @@
+import * as menuApi from '@/api/menu'
+// import { analysis } from '../../router/modules/routerList'
+const user = {
+  state: {
+    // 存放组件之间共享的数据
+    navList: null,
+    innerIframeUrl: 'http://192.168.4.210:81', // 开发环境
+    // innerIframeUrl: '', // 运行环境
+    teacherObj: { // 教师画像
+      curId: ''//
+    },
+    analysisObj: {
+      panelId: '',
+      siteId: '',
+      menuId: '',
+      curId: '',
+      analysisName: '',
+      analysisId: '',
+      skipType: '',
+      curNavId: '' // 当前菜单ID
+    }
+  },
+  mutations: {
+    // 显式的更改state里的数据
+    nav: (state, navList) => {
+      state.navList = navList
+    },
+    curNavId: (state, curNavId) => {
+      state.curNavId = curNavId
+    },
+    panelId: (state, p) => {
+      state.analysisObj.panelId = p
+    },
+    siteId: (state, p) => {
+      state.analysisObj.siteId = p
+    },
+    menuId: (state, p) => {
+      state.analysisObj.menuId = p
+    },
+    curId: (state, p) => {
+      state.analysisObj.curId = p
+    },
+    analysisName: (state, p) => {
+      state.analysisObj.analysisName = p
+    },
+    analysisId: (state, p) => {
+      state.analysisObj.analysisId = p
+    },
+    skipType: (state, p) => {
+      state.analysisObj.skipType = p
+    }
+  },
+  // getters: {
+  //   // 获取数据的方法
+  // },
+  actions: {
+    getNavInfo({ commit }, callback) {
+      menuApi.getMenu({}, res => {
+        commit('nav', res)
+        callback(res)
+      })
+    }
+  }
+}
+export default user

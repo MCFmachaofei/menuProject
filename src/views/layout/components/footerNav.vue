@@ -1,0 +1,168 @@
+<template>
+    <div class="footerNav flexColumn" ref="footerNav" v-show="navIsShow">
+        <ul :class="isShow ? 'spread' : 'unspread'" ref="footerList">
+            <li v-for="(item,index) in footerNav" :key="index" @click="footerNavClick(index)" :class="curIndex === index ? 'hot' : ''">
+                <em></em>
+                <a>
+                    <div><img :src="require('@/assets/img/'+ item.icon)" alt=""/></div>
+                    <p>{{item.name}}</p>
+                </a>
+            </li>
+        </ul>
+        <!-- <ul class="last">
+            <li @click="showNav()">
+                <a v-if="isShow">
+                    <div>
+                        <img src="@/assets/img/icon13.png" alt="">
+                    </div>
+                    <p>隐藏菜单</p>
+                </a>
+                <a v-if="!isShow">
+                    <div>
+                        <img src="@/assets/img/icon12.png" alt="">
+                    </div>
+                    <p>展开菜单</p>
+                </a>
+            </li>
+        </ul> -->
+        <ul class="last">
+            <li @click="showNav()">
+                <a>
+                    <div>
+                        <img src="@/assets/img/icon13.png" alt="">
+                    </div>
+                    <p>隐藏菜单</p>
+                </a>
+                <!-- <a>
+                    <div>
+                        <img src="@/assets/img/icon12.png" alt="">
+                    </div>
+                    <p>展开菜单</p>
+                </a> -->
+            </li>
+        </ul>
+    </div>
+</template>
+<script>
+import $ from 'jquery'
+export default {
+  data () {
+    return {
+      navIsShow: true,
+      isShow: true,
+      curIndex: 2, // 默认选中第一个
+      footerNav: [
+        {
+          name: '信息门户',
+          url: '',
+          // icon: 'icon08.png'
+          icon: '2.png'
+        },
+        {
+          name: '服务门户',
+          url: '',
+          // icon: 'icon09.png'
+          icon: '3.png'
+        },
+        {
+          name: '数据门户',
+          url: '',
+          // icon: 'icon10.png'
+          icon: '1.png'
+        },
+        {
+          name: '资源门户',
+          url: '',
+          // icon: 'icon11.png'
+          icon: '4.png'
+        }
+      ]
+    }
+  },
+  methods: {
+    showNav () {
+      // this.isShow = !this.isShow
+      // if (this.isShow) {
+      //   this.$refs.footerNav.style.overflow = 'inherit'
+      // } else {
+      //   this.$refs.footerNav.style.overflow = 'hidden'
+      // }
+      this.navIsShow = false
+    },
+    footerNavClick (index) {
+      this.curIndex = index
+      $(this.$refs.footerList).find('li').removeClass('hot')
+    }
+  }
+}
+</script>
+<style lang="less" scoped>
+@import '~@/assets/styls/common.less';
+.footerNav{
+    position:fixed;
+    bottom:30px;
+    left:10px;
+    width:85px;
+    z-index:999;
+    // overflow: hidden;
+    ul{
+        transition:all 1s;
+    }
+    .last{
+        position:relative;
+        z-index:1002;
+        li{
+            background:#4173ba;
+            cursor: pointer;
+            margin-bottom:0 none;
+        }
+    }
+    .spread{
+        height:276px;
+
+    }
+    .unspread{
+        position:relative;
+        z-index:998;
+        height:0;
+    }
+    li{
+        cursor: pointer;
+        .flexColumn;
+        height:68px;
+        margin-bottom:1px;
+        background-color:@footerNavBgColor;
+
+        &:hover{
+            opacity: 0.9;
+        }
+        &.hot{
+            position:relative;
+            em{
+                position:absolute;
+                z-index:1000;
+                width:98px;
+                height:79px;
+                background-image: url(~@/assets/img/icon14.png);
+                left: -7px;
+                top: -4px;
+            }
+        }
+        a{
+            position:relative;
+            z-index:1001;
+            .flex1;
+            .flexCenter;
+            .alignCenter;
+            .flexColumn;
+            &:hover{
+                color:#fff;
+            }
+            img{
+                flex-shrink: 0;
+                margin-bottom:8px;
+            }
+        }
+    }
+}
+</style>

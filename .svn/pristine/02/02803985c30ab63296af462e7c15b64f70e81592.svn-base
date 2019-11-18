@@ -1,0 +1,73 @@
+<template>
+  <div class="flex flex1"
+       style="padding-top:72px;">
+    <iframe width="100%"
+            height="100%"
+            frameborder='no'
+            marginwidth='0'
+            marginheight='0'
+            scrolling='no'
+            border='0'
+            :src='setSrc'></iframe>
+  </div>
+</template>
+<script>
+export default {
+  data () {
+    return {
+      setSrc: '',
+      message: {}
+    }
+  },
+  watch: {
+    message () {
+      // console.log('rewrwe',this.message.pathIndex);
+      this.gotoUrl(this.message.tag, this.message.url)
+    }
+  },
+  created () {
+    // 接受iframe 传递的数据
+    window.addEventListener('message', (e) => {
+      var data = e.data
+      this.message = data.data
+      // this.gotoUrl(data.pathIndex, data.browsePath)
+    })
+  },
+  mounted () {
+    // var setIp = this.$store.state.user.innerIframeUrl
+    // var time = (new Date()).valueOf()
+    // this.setSrc = setIp + '/dataPortal/zymd-index/index.html?t=' + time
+    this.setSrc = 'http://localhost:8083/zymd-index/index.html'
+  },
+  methods: {
+    gotoUrl (tag, url) {
+      /**
+       *  tag:0 驾驶舱 1 校务分析  2 个人画像  3 指标管理
+       *  url: 路由
+      */
+      let path = ''
+      switch (tag) {
+        case 0:
+          // 驾驶舱
+          path = url
+          break
+        case 1:
+          // 校务分析
+          path = url
+          break
+        case 2:
+          // 个人画像
+          path = url
+          break
+        case 3:
+          // 指标管理
+          path = url
+          break
+      }
+      this.$router.push({
+        path: path
+      })
+    }
+  }
+}
+</script>

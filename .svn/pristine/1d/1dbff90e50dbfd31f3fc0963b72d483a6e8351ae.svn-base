@@ -1,0 +1,65 @@
+<template>
+    <div class="flex flex1" id="wrap">
+        <leftTreeNav :treeList = 'treeList' :curIndex ='curIndex'/>
+        <div class="flex1 flex" id="cnt">
+            <router-view/>
+        </div>
+        <!-- <footerNav/> -->
+    </div>
+</template>
+<script>
+import leftTreeNav from '@/views/layout/components/leftTreeNav'
+// import footerNav from '@/views/layout/components/footerNav'
+import * as menuApi from '@/api/menu'
+export default {
+  components: {
+    leftTreeNav
+    // footerNav
+  },
+  data () {
+    return {
+      id: '',
+      curIndex: '0',
+      treeList: []
+    }
+  },
+  mounted () {
+    this.id = this.$route.params.id
+    let obj = {}
+    obj.router = 'analysis'
+    obj.id = this.id
+    // menuApi.getMenu(obj, res => {
+    //   this.treeList = res
+    //   let checkName = localStorage.getItem('analysisData')
+    //   for (let i in this.treeList) {
+    //     if (this.treeList[i].name === checkName) {
+    //       this.curIndex = i
+    //       break
+    //     }
+    //   }
+    //   this.getIndex(this.treeList[this.curIndex])
+    // })
+    // console.log(localStorage.getItem('analysisData'))
+    // var treeData =
+    this.treeList = JSON.parse(localStorage.getItem('analysisData'))
+    // this.treeList = localStorage.getItem('analysisData')
+  },
+  methods: {
+    getIndex (obj) {
+      debugger
+      if (obj.children) {
+        this.curIndex += '-0'
+      } else {
+        this.curIndex += '-1'
+        return false
+      }
+      this.getIndex(obj.children)
+    }
+  }
+}
+</script>
+<style rel="stylesheet/less" lang="less" scoped>
+#cnt{
+  padding: 0px;
+}
+</style>

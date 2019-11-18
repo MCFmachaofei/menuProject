@@ -1,0 +1,8 @@
+import $ from 'jquery'
+import store from '../store'
+/**
+ * 中央民大获取菜单
+ */
+export const getMenu = (data, callback) => {
+  $.post(store.state.user.innerIframeUrl + '/zymdMenu/getMenu', data, callback, 'json')
+}

@@ -1,0 +1,126 @@
+@import 'base.less';
+@import 'space.less';
+
+body{
+    background:url(../img/bg.png) no-repeat;
+    color:#fff;
+    font-size:14px;
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    height:100%;
+    min-width:1399px;
+}
+html,#app{
+    height:100%;
+    min-height:450px;
+}
+#top{
+    position: fixed;
+    left:0;
+    top:0;
+    background:#191d27;
+    z-index:999;
+    width:100%;
+    >div{
+        height:100%;
+    }
+}
+#wrap{
+    padding-top:72px;
+}
+html,*{
+    padding:0;
+    margin:0;
+    box-sizing:border-box;
+}
+img{
+    display: block;
+    flex-shrink: 0;
+}
+ul{
+    list-style: none;
+}
+.relative{
+    position: relative;
+}
+a{
+    text-decoration: none;
+    color:#fff;
+    &:hover{
+        color:@hoverColor
+    }
+}
+i,em{
+    font-style: normal;
+}
+.flex{
+    display: flex;
+}
+.flex1{
+    flex:1;
+}
+.flexColumn{
+    .flex;
+    flex-direction: column;
+}
+.flexEnd{
+    .flex;
+    justify-content: flex-end;
+}
+.flexSpaceBetween{
+    .flex;
+    justify-content:space-between;
+}
+.flesSpaceAround{
+    .flex;
+    justify-content: space-around;
+}
+.flexStart{
+    .flex;
+    justify-content: flex-start;
+}
+.flexCenter{
+    .flex;
+    justify-content: center;
+}
+.alignStart{
+    .flex;
+    align-items: flex-start;
+}
+.alignEnd{
+    .flex;
+    align-items: flex-end;
+}
+.alignCenter{
+    .flex;
+    align-items: center;
+}
+.aignStretch{
+    .flex;
+    align-items: stretch;
+}
+.boxSizing{
+    box-sizing: border-box;
+}
+#cnt{
+    padding:22px;
+}
+ /* 设置滚动条的样式 */
+ ::-webkit-scrollbar {
+	width:8px;
+	background-color: transparent;
+}
+
+/* 滚动槽 */
+::-webkit-scrollbar-track {
+	// border-radius:3px;
+}
+
+/* 滚动条滑块 */
+::-webkit-scrollbar-thumb {
+	
+	// border-radius:3px;
+	background:#292c38;
+}
+.router-link-active{
+    border-bottom: 2px solid #338be6;
+}

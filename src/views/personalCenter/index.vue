@@ -1,0 +1,90 @@
+<template>
+  <div class="flex flex1" style="padding-top:72px;">
+    <!-- <iframe width="100%" height="100%" border='0' :src='"http://192.168.0.22:8020/library/index.html?t="+randomObj.edit'></iframe> -->
+    <iframe width="100%" height="100%" frameborder='no' marginwidth='0' marginheight='0' scrolling='no' border='0' :src='setSrc'></iframe>
+  </div>
+</template>
+<script>
+export default {
+  data () {
+    return {
+      message: {},
+      setSrc: ''
+    }
+  },
+  watch: {
+    message () {}
+  },
+  created () {
+    // 接受iframe 传递的数据
+    this.initListen()
+  },
+  mounted () {
+    var setIp = this.$store.state.user.innerIframeUrl
+    var time = new Date().valueOf()
+    this.setSrc = setIp + '/dataPortal/personalCenter/personalCenter.html?t=' + time
+  },
+  methods: {
+    getAnotherMessageFunc () {
+      var _that = this
+      window.skipFuncObj = function (e) {
+        var data = e.data
+        _that.gotoUrl2(data)
+      }
+      return skipFuncObj
+    },
+    getOldMessageFunc (e) {
+      return window.skipFuncObj
+    },
+    initListen () {
+      var _that = this
+      window.removeEventListener('message', _that.getOldMessageFunc())
+      window.addEventListener('message', _that.getAnotherMessageFunc())
+    },
+    gotoUrl2 (data) {
+      if (!data) {
+        return
+      }
+      if (!data.data) {
+        return
+      }
+      var tag = data.data.tag
+      var url = data.data.url
+
+      this.gotoUrl(tag, url)
+    },
+    gotoUrl (tag, url) {
+      /**
+       *  tag:0 驾驶舱  首页  灵活查询   1 校务分析  2 个人画像
+       *  url: 路由
+       */
+      let path = ''
+      switch (tag) {
+        case 0:
+          // 驾驶舱  首页  灵活查询
+          path = url + '/iframe'
+          break
+        case 1:
+          // 校务分析
+          path = '/analysis' + url + '/current'
+          break
+        case 2:
+          // 个人画像
+          path = '/personalPortrait' + url
+          break
+        case 3:
+          // 个人画像 => 教师画像
+          path = url
+          break
+        case 4:
+          // 个人画像 => 学生画像
+          path = '/studentPortrait' + url
+          break
+      }
+      this.$router.push({
+        path: path
+      })
+    }
+  }
+}
+</script>

@@ -1,0 +1,29 @@
+
+/**
+* 页面基础颜色配置
+**/
+
+@fontColor:#cdd4dd; //字体主体颜色
+
+@navFontColor:#747474;//导航字体颜色
+
+@hoverColor: #549bfb;//hover字体颜色
+
+@hoverBgColor:#338be6;//hover背景颜色
+
+@borderColor:#2a2a3a;//border颜色
+
+@tableColor:rgba(255,255,255,.7);//table 底色
+
+@pageBgColor:#4466f4;//页码背景颜色
+
+@navChildColor:#5e6874;//子菜单字体颜色
+
+@hoverNavChildColor:#105ab4;//子菜单字体高亮颜色
+
+
+@footerNavBgColor:#2c313d;//
+
+.borderRadius(@radius){
+    border-radius: @radius
+}

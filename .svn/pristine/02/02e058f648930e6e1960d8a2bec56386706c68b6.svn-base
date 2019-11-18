@@ -1,0 +1,124 @@
+import Layout from '@/views/layout/layout'
+
+// 个人画像
+export const personalPortrait = {
+
+  path: '/personalPortrait/:id',
+  name: 'personalPortrait',
+  meta: { role: ['admin'] },
+  component: Layout,
+  redirect: '/personalPortrait/:id/iframe',
+  // component: () => import('@/views/personalPortrait/index.vue'),
+  children: [
+    {
+      // 基本信息
+      path: 'inner/:pathIndex/:browsePath',
+      name: 'inner',
+      component: () => import('@/views/personalPortrait/iframe/inner.vue')
+    },
+    {
+      // iframe
+      path: 'iframe',
+      name: 'iframe',
+      component: () => import('@/views/personalPortrait/iframe/iframe.vue')
+    }
+  ]
+}
+// 校务分析
+export const analysis = {
+
+  path: '/analysis/:id',
+  name: 'analysis',
+  component: Layout,
+  redirect: '/analysis/:id/iframe',
+  // component: () => import('@/views/analysis/iframe/index.vue'),
+  children: [
+    {
+      // index
+      path: 'index',
+      name: 'index',
+      query: {
+        src: 'test'
+      },
+      component: () => import('@/views/analysis/index.vue'),
+      children: [
+        {
+          // index
+          path: 'innerIframe/:panelId/:siteId',
+          name: 'innerIframe',
+          query: {
+            src: 'test'
+          },
+          component: () => import('@/views/analysis/iframe/inner.vue')
+        }
+      ]
+    },
+
+    {
+      // iframe
+      path: 'iframe',
+      name: 'iframe',
+      component: () => import('@/views/analysis/iframe/iframe.vue')
+
+    }
+
+  ]
+}
+// deck 领导驾驶舱
+export const deck = {
+  path: '/deck/:id',
+  name: 'deck',
+  component: Layout,
+  redirect: '/deck/:id/iframe',
+  // component: () => import('@/views/deck/index.vue'),
+  children: [
+    {
+      // iframe
+      path: 'iframe',
+      name: 'iframe',
+      component: () => import('@/views/deck/index.vue')
+    }
+  ]
+}
+// iframe
+export const iframe = {
+  path: '/iframe',
+  name: 'iframe',
+  component: () => import('@/views/iframe/index.vue')
+}
+// 指标管理
+export const targetManage = {
+  path: '/targetManage/:id',
+  name: 'targetManage',
+  component: Layout,
+  redirect: '/targetManage/:id/iframe',
+  children: [
+    {
+      // iframe
+      path: 'iframe',
+      name: 'iframe',
+      component: () => import('@/views/targetManage/index.vue')
+    }
+  ]
+}
+// 个人中心
+export const personalCenter = {
+  path: '/personalCenter/:id',
+  name: 'personalCenter',
+  component: Layout,
+  redirect: '/personalCenter/:id/iframe',
+  children: [
+    {
+      // iframe
+      path: 'iframe',
+      name: 'iframe',
+      component: () => import('@/views/personalCenter/index.vue')
+    },
+  ]
+}
+// 灵活查询
+export const quickQuery = {
+  path: '/quickQuery',
+  name: 'quickQuery',
+  component: () => import('@/views/quickQuery/index.vue')
+}
